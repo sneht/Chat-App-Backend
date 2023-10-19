@@ -1,0 +1,7 @@
+{
+  "ADDED": "Done Successfully",
+  "NOT_FOUND": "Email or Password is invalid",
+  "UNSUCCESSFUL": "User not added",
+  "ALREADY_EXISTS": "USer already exists",
+  "INVALID_USER": "Email or Password is invalid"
+}
