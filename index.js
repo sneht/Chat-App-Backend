@@ -40,7 +40,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://chat-app-frontend-sneht.vercel.app/",
+    origin: "*",
     // "https://chat-app-st.netlify.app",
     methods: ["GET", "POST"],
   },
