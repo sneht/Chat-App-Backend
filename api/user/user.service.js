@@ -46,9 +46,12 @@ exports.createUser = async (body) => {
   }
 };
 
-exports.findAllUserList = async () => {
+exports.findAllUserList = async ({ _id }) => {
   try {
-    const response = await User.find({ deletedAt: null }).populate({
+    const response = await User.find({
+      _id: { $ne: _id },
+      deletedAt: null,
+    }).populate({
       path: "groups",
       populate: ["users"],
     });

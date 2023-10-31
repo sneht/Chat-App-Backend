@@ -1,4 +1,5 @@
 const { commonResponse } = require("../../helpers");
+const { isAuthorized } = require("../../helpers/gaurds");
 const {
   STR_USER_CREATED_CAP,
   STR_USER_ADDED_SUCCESSFULLY,
@@ -47,10 +48,10 @@ router.post("/", createUserValidation, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", isAuthorized, async (req, res) => {
   try {
-    const { body } = req || {};
-    const { success, message, data } = await findAllUserList();
+    const { userDetails } = req || {};
+    const { success, message, data } = await findAllUserList(userDetails);
     if (success) {
       return commonResponse.success(res, data, "USERS_LIST", message);
     } else {

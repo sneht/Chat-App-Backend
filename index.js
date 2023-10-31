@@ -40,8 +40,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://chat-app-st.netlify.app",
-    // "http://localhost:3000",
+    origin: "http://localhost:3000",
+    // "https://chat-app-st.netlify.app",
     methods: ["GET", "POST"],
   },
 });
@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("join_room", async (data) => {
-    const { fullname, room } = data; // Data sent from client when join_room event emitted
+    const { fullname, room, userData } = data; // Data sent from client when join_room event emitted
     socket.join(room.group_name); // Join the user to a socket room
     // getAllMessages(room);
     let __createdtime__ = Date.now();
@@ -80,7 +80,7 @@ io.on("connection", (socket) => {
     //   username: CHAT_BOT,
     //   __createdtime__,
     // });
-    getAllMessages(room)
+    getAllMessages(room, userData)
       .then((last100Messages) => {
         socket.emit("last_100_messages", last100Messages);
       })
@@ -100,7 +100,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    // console.log("User disconnected from the chat");
     const user = allUsers.find((user) => user.id == socket.id);
     if (user?.username) {
       allUsers = leaveRoom(socket.id, allUsers);
@@ -119,8 +118,11 @@ io.on("connection", (socket) => {
   socket.on("send_message", (data) => {
     const { message, fullname, room } = data;
     const { created_by } = room || {};
-    io.in(room.group_name).emit("receive_message", data);
-    sendMessage({ message, sent_by: fullname || created_by, room });
+    sendMessage({ message, sent_by: fullname || created_by, room }).then(
+      (messageResponse) => {
+        io.in(room.group_name).emit("receive_message", messageResponse);
+      }
+    );
   });
 
   socket.on("leave_room", (data) => {

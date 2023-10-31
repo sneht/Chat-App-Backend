@@ -2,9 +2,10 @@ const { STR_SOMETHING_WENT_WRONG } = require("../../utils/const");
 const Group = require("../../models/group.model");
 const User = require("../../models/users.model");
 
-exports.createGroup = async (body) => {
+exports.createGroup = async (body, { _id }) => {
   try {
-    const { group_name, created_by, users } = body || {};
+    const { group_name, created_by, users = [] } = body || {};
+    users.push(_id);
     const newGroup = new Group({
       group_name,
       created_by,

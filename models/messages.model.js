@@ -15,6 +15,13 @@ const messageSchema = new mongoose.Schema(
       ref: "Group",
       required: true,
     },
+    users: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
     deletedAt: {
       type: String,
       required: false,

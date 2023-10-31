@@ -12,8 +12,8 @@ const {
 
 router.post("/", async (req, res) => {
   try {
-    const { body } = req || {};
-    const { success, message, data } = await createGroup(body);
+    const { body, userDetails } = req || {};
+    const { success, message, data } = await createGroup(body, userDetails);
     if (success) {
       return commonResponse.success(res, data, "GROUP_CREATED", message);
     } else {
