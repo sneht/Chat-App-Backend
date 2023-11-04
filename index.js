@@ -40,7 +40,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "https://chat-app-frontend-sneht.vercel.app/",
+    // http://localhost:3000
     // "https://chat-app-st.netlify.app",
     methods: ["GET", "POST"],
   },
@@ -123,6 +124,15 @@ io.on("connection", (socket) => {
         io.in(room.group_name).emit("receive_message", messageResponse);
       }
     );
+  });
+
+  socket.on("message_deleted_for_everyone", (data) => {
+    const { room, userData } = data || {};
+    getAllMessages(room, userData)
+      .then((last100Messages) => {
+        io.in(room.group_name).emit("last_100_messages", last100Messages);
+      })
+      .catch((err) => console.log(err));
   });
 
   socket.on("leave_room", (data) => {
